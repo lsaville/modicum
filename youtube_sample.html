@@ -45,6 +45,11 @@
         var start = times[times.length-1]
         player.pauseVideo();
         player.seekTo(start);
+        var playbackRate = 1;
+        var data = { event: 'command', func: 'setPlaybackRate', args: [playbackRate, true] };
+        var message = JSON.stringify(data);
+        var iframe = player.getIframe();
+        iframe.contentWindow.postMessage(message, '*');
         player.playVideo();
       });
 
@@ -54,7 +59,7 @@
         player.seekTo(start);
         player.playVideo();
         var playbackRate = 0.5;
-        var data = {event: 'command', func: 'setPlaybackRate', args: [playbackRate, true]};
+        var data = { event: 'command', func: 'setPlaybackRate', args: [playbackRate, true] };
         var message = JSON.stringify(data);
         var iframe = player.getIframe();
         iframe.contentWindow.postMessage(message, '*');
