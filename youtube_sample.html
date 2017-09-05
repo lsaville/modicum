@@ -2,6 +2,8 @@
 <html>
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <input type='text' class='video-desired' placeholder='youtube vid url'>
+    <input type='button' class='fetch-video' value='study!'>
     <div id="player"></div>
 		<button id='gimmetime'>console log times!</button>
 		<button id='addtime'>add time to the array</button>
@@ -9,21 +11,37 @@
 		<button id='playmoveslow'>play the move but slow!</button>
 
     <script>
-			var tag = document.createElement('script');
+      document.getElementsByClassName('fetch-video')[0].addEventListener('click', myRadFun);
+
+      function myRadFun () {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+
+      function url () {
+        var vidUrl = document.getElementsByClassName('video-desired')[0].value;
+        return extractVidIdFromUrl(vidUrl);
+      }
+
+      function extractVidIdFromUrl (url) {
+        return url.substr( url.length-11 );
+      }
+
+
       var times = [];
 
-			tag.src = "https://www.youtube.com/iframe_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 			// This function creates an iframe and YouTube player
 			// after the API code downloads.
 			var player;
+
 			function onYouTubeIframeAPIReady() {
 				player = new YT.Player('player', {
 					height: '390',
 					width: '640',
-					videoId: '9hZQzNw5uiA',
+          videoId: `${url()}`,
           playerVars: {
             'rel': 0,
             'controls':0,
@@ -47,7 +65,7 @@
         player.seekTo(start);
         var playbackRate = 1;
         var data = { event: 'command', func: 'setPlaybackRate', args: [playbackRate, true] };
-        var message = JSON.stringify(data);
+        var message = JSON.stringify(data);                 
         var iframe = player.getIframe();
         iframe.contentWindow.postMessage(message, '*');
         player.playVideo();
